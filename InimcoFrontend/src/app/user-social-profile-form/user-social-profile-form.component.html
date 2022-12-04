@@ -1,0 +1,77 @@
+<div>
+  <h2>Create a new account</h2>
+  <form [formGroup]="userSocialProfileForm" (ngSubmit)="submit(userSocialProfileForm.value)">
+    <mat-form-field >
+      <mat-label>First Name</mat-label>
+      <input matInput placeholder="First Name"
+             formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field >
+      <mat-label>Last Name</mat-label>
+      <input matInput placeholder="Last name"
+             formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Social Skills</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Enter socialSkills">
+        <mat-chip-row *ngFor="let socialSkill of socialSkills"
+                      (removed)="remove(socialSkill)"
+                      [editable]="true"
+                      (edited)="edit(socialSkill, $event)">
+          {{socialSkill}}
+          <button matChipRemove [attr.aria-label]="'remove ' + socialSkill">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input placeholder="New socialSkill..."
+               [matChipInputFor]="chipGrid"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="add($event)"/>
+      </mat-chip-grid>
+    </mat-form-field>
+
+    <h1>Social Media Accounts</h1>
+
+      <ng-container formArrayName="socialMediaAccounts">
+        <ng-container *ngFor="let accountForm of accounts.controls; let i = index">
+            <mat-icon class="delete-btn" (click)="deleteAccount(i)">
+              delete_forever</mat-icon>
+          <div class="lesson-form-row" [formGroup]="castControlToGroup(accountForm)">
+            <mat-form-field appearance="fill">
+              <mat-label>Account</mat-label>
+              <input matInput
+                     formControlName="user"
+                     placeholder="">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Social Media type</mat-label>
+              <mat-select formControlName="socialMediaPlatform"
+                          placeholder="Lesson level">
+                <mat-option *ngFor="let smp of socialMediaPlatforms" [value]="smp">{{smp}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+       </ng-container>
+      </ng-container>
+              <div>
+            <button type="button" mat-mini-fab (click)="addSocialMediaAccount()">
+              <mat-icon class="add-course-btn">add</mat-icon>
+            </button>
+          </div>
+
+
+
+    <button type="submit" mat-raised-button [disabled]="!userSocialProfileForm.valid" color="primary">Submit</button>
+  </form>
+
+  <h3>
+    Object from the backend:
+  </h3>
+  <pre>
+    {{serverResponse }}
+  </pre>
+</div>
